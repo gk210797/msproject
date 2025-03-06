@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rabbitmq
+      - auth
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  auth:
+    build: ./auth
+    container_name: auth
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  user:
+    build: ./user
+    container_name: user
+    depends_on:
+      - rabbitmq
+    environment:
+       - RABBITMQ_URL=amqp://rabbitmq:5672
+
+  notification:
+    build: ./notification
+    container_name: notification
+    depends_on:
+      - rabbitmq
+    environment:
+       - RABBITMQ_URL=amqp://rabbitmq:5672
+     
