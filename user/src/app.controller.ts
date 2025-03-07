@@ -14,4 +14,14 @@ export class AppController {
   async authuser() {
     return this.appService.authuser();
   }
+
+  @MessagePattern({ cmd: 'createuser' })
+  async createuser(data: { username: string; password: string }) {
+    const user = await this.appService.findUser(data.username);
+    if (user) {
+      return { status: 'error', message: 'User already exists' };
+    }
+    await this.appService.createUser(data.username, data.password);
+    return { status: 'success', message: 'user craeted successfully' };
+  }
 }

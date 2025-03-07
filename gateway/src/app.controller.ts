@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Inject } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
@@ -38,6 +38,14 @@ async authchecking(){
 async notificationChecking(){
   const result = await firstValueFrom(
     this.notificationclient.send({cmd:"notification"},{})
+  )
+  return result
+}
+
+@Post("createuser")
+async createuser(@Body() data: {username: string; password: string}){
+  const result = await firstValueFrom(
+    this.userclient.send({cmd:"createuser"},data)
   )
   return result
 }
