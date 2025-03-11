@@ -7,6 +7,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
   @MessagePattern({ cmd: 'user' })
   async getusers() {
+    console.log('🔵 /test endpoint hit');
     return this.appService.getallUsers();
   }
 
